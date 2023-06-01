@@ -14,6 +14,8 @@ DEBUG ?= 0
 
 SRC =\
 	${SRC_PATH}/main.cpp\
+	${SRC_PATH}/core.cpp\
+	${SRC_PATH}/window.cpp\
 
 INCLUDE =\
 	-I./include/\

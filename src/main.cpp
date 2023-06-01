@@ -6,10 +6,12 @@
 //
 ////////////////////////
 
-#include <iostream>
+#include "core.hpp"
 
 int main()
 {
-    std::cout << "Hello World" << std::endl;
+    PhysikEngine::Core core = PhysikEngine::Core("Physik Engine", {800, 600});
+
+    core.launch();
     return 0;
 }
