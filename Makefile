@@ -23,7 +23,7 @@ SRC_COUNT = ${shell echo ${SRC} | wc -w}
 OBJ = ${SRC:${SRC_PATH}/%${FILE_TYPE}=${BUILD_PATH}/%.o}
 DEBUG_FLAGS = -g3
 OBJ_FLAGS = -O3 -W -Wall -Wextra -Werror ${INCLUDE}
-BIN_FLAGS = -lconfig++ -lsfml-graphics -lsfml-window -lsfml-system
+BIN_FLAGS = -lconfig++ -lsfml-graphics -lsfml-window -lsfml-system imgui.so
 BIN_NAME = physik-engine
 
 all: ${BIN_NAME}
