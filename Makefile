@@ -16,6 +16,7 @@ SRC =\
 	${SRC_PATH}/main.cpp\
 	${SRC_PATH}/core.cpp\
 	${SRC_PATH}/window.cpp\
+	${SRC_PATH}/time.cpp\
 
 INCLUDE =\
 	-I./include/\

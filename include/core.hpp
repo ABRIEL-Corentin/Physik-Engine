@@ -10,6 +10,7 @@
 
 #include "physik-engine.hpp"
 #include "window.hpp"
+#include "time.hpp"
 
 namespace PhysikEngine
 {
@@ -22,7 +23,10 @@ namespace PhysikEngine
 
         private:
             Window m_window;
+            Time &m_time;
 
             void processEvents();
+            void update();
+            void render();
     };
 }

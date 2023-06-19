@@ -11,17 +11,16 @@
 namespace PhysikEngine
 {
     Core::Core(const std::string &window_name, sf::Vector2u window_size)
-        : m_window(window_name, window_size)
+        : m_window(window_name, window_size),
+          m_time(Time::getInstance())
     { }
 
     void Core::launch()
     {
         while (m_window.isOpen()) {
             processEvents();
-
-            m_window.clear();
-
-            m_window.display();
+            update();
+            render();
         }
     }
 
@@ -30,6 +29,7 @@ namespace PhysikEngine
         sf::Event event;
 
         while (m_window.pollEvent(event)) {
+            ImGui::SFML::ProcessEvent(event);
             switch (event.type) {
                 case sf::Event::Closed:
                     m_window.close();
@@ -38,5 +38,23 @@ namespace PhysikEngine
                     break;
             }
         }
+    }
+
+    void Core::update()
+    {
+        m_time.update();
+        ImGui::SFML::Update(m_window, m_time.getDeltaTime());
+    }
+
+    void Core::render()
+    {
+        m_window.clear();
+
+        ImGui::Begin("Window");
+
+        ImGui::End();
+
+        ImGui::SFML::Render(m_window);
+        m_window.display();
     }
 }

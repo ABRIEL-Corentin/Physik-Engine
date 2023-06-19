@@ -16,5 +16,9 @@ namespace PhysikEngine
     {
         public:
             Window(const std::string &name, sf::Vector2u size);
+            ~Window();
+
+        private:
+            void initImGui();
     };
 }

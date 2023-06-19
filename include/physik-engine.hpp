@@ -18,3 +18,10 @@
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui-SFML.h"
 #include "imgui/imgui_stdlib.h"
+
+#include <iostream>
+
+#define ERROR(x, code) do { \
+        std::cerr << __FILE__ << ": line " << __LINE__ << ": " << x << std::endl; \
+        exit(code); \
+    } while(0)
