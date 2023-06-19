@@ -7,6 +7,7 @@
 ////////////////////////
 
 #include "core.hpp"
+#include "shapes/circle.hpp"
 
 namespace PhysikEngine
 {
@@ -15,11 +16,20 @@ namespace PhysikEngine
           _time(Time::getInstance()),
           _scene()
     {
-        sf::RectangleShape &shape = _scene.addShape<sf::RectangleShape>(sf::Vector2f(100, 100));
+        Circle &shape1 = _scene.addShape<Circle>();
 
-        shape.setOutlineColor(sf::Color::Red);
-        shape.setOutlineThickness(-2);
+        shape1.setRadius(20);
+        shape1.setOutlineColor(sf::Color::Red);
+        shape1.setFillColor(sf::Color::Transparent);
+        shape1.setOutlineThickness(-2);
 
+        Circle &shape2 = _scene.addShape<Circle>();
+
+        shape2.setRadius(20);
+        shape2.setOutlineColor(sf::Color::Red);
+        shape2.setFillColor(sf::Color::Transparent);
+        shape2.setOutlineThickness(-2);
+        shape2.setPosition(sf::Vector2f(25, 0));
     }
 
     void Core::launch()
