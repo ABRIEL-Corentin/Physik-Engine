@@ -11,13 +11,20 @@
 namespace PhysikEngine
 {
     Core::Core(const std::string &window_name, sf::Vector2u window_size)
-        : m_window(window_name, window_size),
-          m_time(Time::getInstance())
-    { }
+        : _window(window_name, window_size),
+          _time(Time::getInstance()),
+          _scene()
+    {
+        sf::RectangleShape &shape = _scene.addShape<sf::RectangleShape>(sf::Vector2f(100, 100));
+
+        shape.setOutlineColor(sf::Color::Red);
+        shape.setOutlineThickness(-2);
+
+    }
 
     void Core::launch()
     {
-        while (m_window.isOpen()) {
+        while (_window.isOpen()) {
             processEvents();
             update();
             render();
@@ -28,11 +35,11 @@ namespace PhysikEngine
     {
         sf::Event event;
 
-        while (m_window.pollEvent(event)) {
+        while (_window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
             switch (event.type) {
                 case sf::Event::Closed:
-                    m_window.close();
+                    _window.close();
                     break;
                 default:
                     break;
@@ -42,19 +49,27 @@ namespace PhysikEngine
 
     void Core::update()
     {
-        m_time.update();
-        ImGui::SFML::Update(m_window, m_time.getDeltaTime());
+        _time.update();
+        ImGui::SFML::Update(_window, _time.getDeltaTime());
+        _scene.update();
     }
 
     void Core::render()
     {
-        m_window.clear();
+        _window.clear();
 
-        ImGui::Begin("Window");
+        drawDebugWindow();
+        _scene.draw(_window);
 
+        ImGui::SFML::Render(_window);
+        _window.display();
+    }
+
+    void Core::drawDebugWindow()
+    {
+        if (ImGui::Begin("Debug Window")) {
+            ImGui::Text("FPS: %.2f", 1.0f / _time.getDeltaTime().asSeconds());
+        }
         ImGui::End();
-
-        ImGui::SFML::Render(m_window);
-        m_window.display();
     }
 }

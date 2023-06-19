@@ -20,6 +20,8 @@
 #include "imgui/imgui_stdlib.h"
 
 #include <iostream>
+#include <memory>
+#include <concepts>
 
 #define ERROR(x, code) do { \
         std::cerr << __FILE__ << ": line " << __LINE__ << ": " << x << std::endl; \

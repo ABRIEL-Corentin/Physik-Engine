@@ -14,7 +14,6 @@ namespace PhysikEngine
         : sf::RenderWindow({size.x, size.y, 32}, name)
     {
         initImGui();
-        setFramerateLimit(60);
     }
 
     Window::~Window()

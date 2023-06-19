@@ -17,6 +17,7 @@ SRC =\
 	${SRC_PATH}/core.cpp\
 	${SRC_PATH}/window.cpp\
 	${SRC_PATH}/time.cpp\
+	${SRC_PATH}/scene.cpp\
 
 INCLUDE =\
 	-I./include/\
@@ -25,7 +26,7 @@ INDEX = ${words ${shell a="${2}" ; echo $${a/${1}*/${1}} }}
 SRC_COUNT = ${shell echo ${SRC} | wc -w}
 OBJ = ${SRC:${SRC_PATH}/%${FILE_TYPE}=${BUILD_PATH}/%.o}
 DEBUG_FLAGS = -g3
-OBJ_FLAGS = -O3 -W -Wall -Wextra -Werror ${INCLUDE}
+OBJ_FLAGS = -O3 -W -Wall -Wextra -Werror -std=c++20 ${INCLUDE}
 BIN_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system imgui.so
 BIN_NAME = physik-engine
 

@@ -11,6 +11,7 @@
 #include "physik-engine.hpp"
 #include "window.hpp"
 #include "time.hpp"
+#include "scene.hpp"
 
 namespace PhysikEngine
 {
@@ -22,11 +23,13 @@ namespace PhysikEngine
             void launch();
 
         private:
-            Window m_window;
-            Time &m_time;
+            Window _window;
+            Time &_time;
+            Scene _scene;
 
             void processEvents();
             void update();
             void render();
+            void drawDebugWindow();
     };
 }
