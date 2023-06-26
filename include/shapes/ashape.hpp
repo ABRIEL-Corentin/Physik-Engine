@@ -17,9 +17,9 @@ namespace PhysikEngine
         public:
             virtual ~AShape() = default;
 
-            virtual void update(Time &time) override = 0;
+            virtual void update() override = 0;
             virtual void draw(sf::RenderTarget &target) const override = 0;
-            virtual bool collide(const IShape &other) const override = 0;
+            virtual bool collide(const IShape &other) override = 0;
 
         protected:
             sf::Vector2f _velocity;

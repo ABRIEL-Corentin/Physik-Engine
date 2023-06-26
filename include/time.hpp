@@ -18,11 +18,11 @@ namespace PhysikEngine
         public:
             Time();
 
-            inline void update() { m_delta_time = m_clock.restart(); }
-            inline const sf::Time &getDeltaTime() const { return m_delta_time; }
+            inline void update() { _delta_time = _clock.restart(); }
+            inline const sf::Time &getDeltaTime() const { return _delta_time; }
 
         private:
-            sf::Clock m_clock;
-            sf::Time m_delta_time;
+            sf::Clock _clock;
+            sf::Time _delta_time;
     };
 }

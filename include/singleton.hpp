@@ -18,12 +18,12 @@ namespace PhysikEngine
         public:
             virtual ~Singleton() = default;
 
-            static inline T &getInstance() { return m_instance; }
+            static inline T &getInstance() { return _instance; }
 
         private:
-            static T m_instance;
+            static T _instance;
     };
 
     template<typename T>
-    T Singleton<T>::m_instance = T();
+    T Singleton<T>::_instance = T();
 }

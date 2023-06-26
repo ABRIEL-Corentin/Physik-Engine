@@ -9,13 +9,14 @@
 #pragma once
 
 #include "physik-engine.hpp"
+#include "singleton.hpp"
 
 namespace PhysikEngine
 {
-    class Window : public sf::RenderWindow
+    class Window : public sf::RenderWindow, public Singleton<Window>
     {
         public:
-            Window(const std::string &name, sf::Vector2u size);
+            Window();
             ~Window();
 
         private:

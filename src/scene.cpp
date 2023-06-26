@@ -13,10 +13,11 @@ namespace PhysikEngine
     void Scene::update()
     {
         for (auto shape = _shapes.begin(); shape != _shapes.end(); ++shape) {
+            (*shape)->update();
             for (auto target = _shapes.begin(); target != _shapes.end(); ++target) {
                 if (shape->get() != target->get()) {
                     if ((*shape)->collide(**target)) {
-                        std::cout << "Collision!!!" << std::endl;
+                        // Collision
                     }
                 }
             }

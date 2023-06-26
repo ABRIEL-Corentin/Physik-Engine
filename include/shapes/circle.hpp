@@ -15,11 +15,15 @@ namespace PhysikEngine
     class Circle : public AShape, public sf::CircleShape
     {
         public:
-            void update(Time &time) override;
+            Circle(bool grip, const sf::Vector2f &position, float radius);
+
+            void update() override;
             void draw(sf::RenderTarget &target) const override;
-            bool collide(const IShape &other) const override;
+            bool collide(const IShape &other) override;
 
         private:
-            bool collide(const Circle &other) const;
+            bool _grip;
+
+            bool collide(const Circle &other);
     };
 }

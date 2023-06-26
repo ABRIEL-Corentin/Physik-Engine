@@ -10,7 +10,7 @@
 
 int main()
 {
-    PhysikEngine::Core core = PhysikEngine::Core("Physik Engine", {800, 600});
+    PhysikEngine::Core core = PhysikEngine::Core();
 
     core.launch();
     return 0;

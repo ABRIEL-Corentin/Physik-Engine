@@ -18,8 +18,8 @@ namespace PhysikEngine
         public:
             virtual ~IShape() = default;
 
-            virtual void update(Time &time) = 0;
+            virtual void update() = 0;
             virtual void draw(sf::RenderTarget &target) const = 0;
-            virtual bool collide(const IShape &other) const = 0;
+            virtual bool collide(const IShape &other) = 0;
     };
 }

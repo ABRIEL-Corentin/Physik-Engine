@@ -11,7 +11,7 @@
 namespace PhysikEngine
 {
     Time::Time()
-        : m_clock(),
-          m_delta_time()
+        : _clock(),
+          _delta_time()
     { }
 }

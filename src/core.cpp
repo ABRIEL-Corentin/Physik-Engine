@@ -11,25 +11,13 @@
 
 namespace PhysikEngine
 {
-    Core::Core(const std::string &window_name, sf::Vector2u window_size)
-        : _window(window_name, window_size),
+    Core::Core()
+        : _window(Window::getInstance()),
           _time(Time::getInstance()),
           _scene()
     {
-        Circle &shape1 = _scene.addShape<Circle>();
-
-        shape1.setRadius(20);
-        shape1.setOutlineColor(sf::Color::Red);
-        shape1.setFillColor(sf::Color::Transparent);
-        shape1.setOutlineThickness(-2);
-
-        Circle &shape2 = _scene.addShape<Circle>();
-
-        shape2.setRadius(20);
-        shape2.setOutlineColor(sf::Color::Red);
-        shape2.setFillColor(sf::Color::Transparent);
-        shape2.setOutlineThickness(-2);
-        shape2.setPosition(sf::Vector2f(25, 0));
+        _scene.addShape<Circle>(false, sf::Vector2f(100, 100), 20);
+        _scene.addShape<Circle>(true, sf::Vector2f(), 20);
     }
 
     void Core::launch()

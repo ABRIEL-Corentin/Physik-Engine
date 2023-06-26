@@ -18,12 +18,12 @@ namespace PhysikEngine
     class Core
     {
         public:
-            Core(const std::string &window_name, sf::Vector2u window_size);
+            Core();
 
             void launch();
 
         private:
-            Window _window;
+            Window &_window;
             Time &_time;
             Scene _scene;
 
