@@ -18,6 +18,7 @@ SRC =\
 	${SRC_PATH}/window.cpp\
 	${SRC_PATH}/time.cpp\
 	${SRC_PATH}/scene.cpp\
+	${SRC_PATH}/shapes/ashape.cpp\
 	${SRC_PATH}/shapes/circle.cpp\
 
 INCLUDE =\

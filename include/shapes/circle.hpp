@@ -19,11 +19,11 @@ namespace PhysikEngine
 
             void update() override;
             void draw(sf::RenderTarget &target) const override;
-            bool collide(const IShape &other) override;
+            bool collide(IShape &other) override;
 
         private:
             bool _grip;
 
-            bool collide(const Circle &other);
+            bool collide(Circle &other);
     };
 }

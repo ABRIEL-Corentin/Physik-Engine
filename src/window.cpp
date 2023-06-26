@@ -13,6 +13,7 @@ namespace PhysikEngine
     Window::Window()
         : sf::RenderWindow({800, 600, 32}, "Physik Engine")
     {
+        // setFramerateLimit(10);
         initImGui();
     }
 

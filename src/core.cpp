@@ -36,6 +36,9 @@ namespace PhysikEngine
         while (_window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
             switch (event.type) {
+                case sf::Event::Resized:
+                    _window.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
+                    break;
                 case sf::Event::Closed:
                     _window.close();
                     break;
