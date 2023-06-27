@@ -35,5 +35,6 @@ namespace PhysikEngine
             sf::Vector2f _acceleration;
             float _mass;
             bool _static;
+            float _rotation;
     };
 }

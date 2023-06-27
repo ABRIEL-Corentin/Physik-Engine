@@ -20,8 +20,8 @@ namespace PhysikEngine
         Circle &c1 = _scene.addShape<Circle>(false, sf::Vector2f(100, 100), 20);
         Circle &c2 = _scene.addShape<Circle>(false, sf::Vector2f(500, 120), 20);
 
-        Rectangle &c3 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 190), sf::Vector2f(20, 20));
-        Rectangle &c4 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 200), sf::Vector2f(20, 20));
+        Rectangle &c3 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 170), sf::Vector2f(40, 40));
+        Rectangle &c4 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 200), sf::Vector2f(40, 40));
 
         c1.addForce(sf::Vector2f(20, 0));
         c2.addForce(sf::Vector2f(-10, 0));

@@ -35,6 +35,7 @@ namespace PhysikEngine
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             _velocity += _acceleration;
             _acceleration = sf::Vector2f();
+            rotate(-(_rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f));
         }
     }
 
@@ -82,6 +83,10 @@ namespace PhysikEngine
 
             other._velocity.x = rect2NormalVelocity * collisionNormalX + rect2TangentVelocity;
             other._velocity.y = rect2NormalVelocity * collisionNormalY + rect2TangentVelocity;
+
+            _rotation = atan2(other.getPosition().y - getPosition().y, other.getPosition().x - getPosition().x);
+            rotate(-_rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            other.rotate(- _rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
 
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
