@@ -20,6 +20,7 @@ SRC =\
 	${SRC_PATH}/scene.cpp\
 	${SRC_PATH}/shapes/ashape.cpp\
 	${SRC_PATH}/shapes/circle.cpp\
+	${SRC_PATH}/shapes/rectangle.cpp\
 
 INCLUDE =\
 	-I./include/\
@@ -29,7 +30,7 @@ SRC_COUNT = ${shell echo ${SRC} | wc -w}
 OBJ = ${SRC:${SRC_PATH}/%${FILE_TYPE}=${BUILD_PATH}/%.o}
 DEBUG_FLAGS = -g3
 OBJ_FLAGS = -O3 -W -Wall -Wextra -Werror -std=c++20 ${INCLUDE}
-BIN_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system imgui.so
+BIN_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system ./imgui.so
 BIN_NAME = physik-engine
 
 all: ${BIN_NAME}
