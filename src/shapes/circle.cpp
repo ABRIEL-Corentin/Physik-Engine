@@ -8,6 +8,7 @@
 
 #include "shapes/circle.hpp"
 #include "core.hpp"
+#include "utils.hpp"
 
 namespace PhysikEngine
 {
@@ -62,17 +63,29 @@ namespace PhysikEngine
         bool coll = std::fabs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (r1 + r2) * (r1 + r2);
 
         if (coll) {
-            sf::Vector2f tmp_vel = _velocity;
+            sf::Vector2f coll_normal = getPosition() - other.getPosition();
 
-            _velocity = sf::Vector2f(
-                (_velocity.x * (_mass - other._mass) + (2 * other._mass * other._velocity.x)) / (_mass + other._mass),
-                (_velocity.y * (_mass - other._mass) + (2 * other._mass * other._velocity.y)) / (_mass + other._mass)
-            );
+            coll_normal *= 1.0f / length(coll_normal);
 
-            other._velocity = sf::Vector2f(
-                (other._velocity.x * (other._mass - _mass) + (2 * _mass * tmp_vel.x)) / (_mass + other._mass),
-                (other._velocity.y * (other._mass - _mass) + (2 * _mass * tmp_vel.y)) / (_mass + other._mass)
-            );
+            float v1_dot = dot(coll_normal, _velocity);
+            sf::Vector2f v1_collide = coll_normal * v1_dot;
+            sf::Vector2f v1_remainder = _velocity - v1_collide;
+
+            float v2_dot = dot(coll_normal, other._velocity);
+            sf::Vector2f v2_collide = coll_normal * v2_dot;
+            sf::Vector2f v2_remainder = other._velocity - v2_collide;
+
+            float v1_length = length(v1_collide) * sgn(v1_dot);
+            float v2_length = length(v2_collide) * sgn(v2_dot);
+            float common_velocity = 2 * (_mass * v1_length + other._mass * v2_length) / (_mass + other._mass);
+            float v1_length_after_collision = common_velocity - v1_length;
+            float v2_length_after_collision = common_velocity - v2_length;
+
+            v1_collide *= v1_length_after_collision / v1_length;
+            v2_collide *= v2_length_after_collision / v2_length;
+
+            _velocity = v1_collide + v1_remainder;
+            other._velocity = v2_collide + v2_remainder;
 
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);

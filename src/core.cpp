@@ -17,7 +17,7 @@ namespace PhysikEngine
           _scene()
     {
         Circle &c1 = _scene.addShape<Circle>(false, sf::Vector2f(100, 100), 20);
-        Circle &c2 = _scene.addShape<Circle>(false, sf::Vector2f(500, 100), 20);
+        Circle &c2 = _scene.addShape<Circle>(false, sf::Vector2f(500, 120), 20);
 
         c1.addForce(sf::Vector2f(20, 0));
         c2.addForce(sf::Vector2f(-10, 0));
