@@ -11,7 +11,10 @@
 namespace PhysikEngine
 {
     AShape::AShape(bool is_static, float mass)
-        : _mass(mass),
-          _static(is_static)
+        : _velocity(),
+          _acceleration(),
+          _mass(mass),
+          _static(is_static),
+          _rotation()
     { }
 }

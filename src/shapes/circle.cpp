@@ -16,7 +16,6 @@ namespace PhysikEngine
         : AShape(false, radius),
           _grip(grip)
     {
-        std::cout << "mass: " << _mass << std::endl;
         setRadius(radius);
         setOrigin(sf::Vector2f(radius, radius));
         setOutlineColor(sf::Color::Green);

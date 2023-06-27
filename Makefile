@@ -21,6 +21,7 @@ SRC =\
 	${SRC_PATH}/shapes/ashape.cpp\
 	${SRC_PATH}/shapes/circle.cpp\
 	${SRC_PATH}/shapes/rectangle.cpp\
+	${SRC_PATH}/shapes/polygon.cpp\
 
 INCLUDE =\
 	-I./include/\

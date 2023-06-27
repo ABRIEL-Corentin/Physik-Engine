@@ -9,6 +9,7 @@
 #include "core.hpp"
 #include "shapes/circle.hpp"
 #include "shapes/rectangle.hpp"
+#include "shapes/polygon.hpp"
 
 namespace PhysikEngine
 {
@@ -20,14 +21,34 @@ namespace PhysikEngine
         Circle &c1 = _scene.addShape<Circle>(false, sf::Vector2f(100, 100), 20);
         Circle &c2 = _scene.addShape<Circle>(false, sf::Vector2f(500, 120), 20);
 
-        Rectangle &c3 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 170), sf::Vector2f(40, 40));
-        Rectangle &c4 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 200), sf::Vector2f(40, 40));
-
         c1.addForce(sf::Vector2f(20, 0));
         c2.addForce(sf::Vector2f(-10, 0));
 
-        c3.addForce(sf::Vector2f(20, 0));
-        c4.addForce(sf::Vector2f(-10, 0));
+        Rectangle &r1 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 170), sf::Vector2f(40, 40));
+        Rectangle &r2 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 200), sf::Vector2f(40, 40));
+
+        r1.addForce(sf::Vector2f(20, 0));
+        r2.addForce(sf::Vector2f(-10, 0));
+
+        Polygon &p1 = _scene.addShape<Polygon>(false, sf::Vector2f(100, 250), 20);
+        Polygon &p2 = _scene.addShape<Polygon>(true, sf::Vector2f(150, 250), 20);
+
+        p1.addPoint(sf::Vector2f(0, -20));
+        p1.addPoint(sf::Vector2f(20, -20));
+        p1.addPoint(sf::Vector2f(20, 20));
+        p1.addPoint(sf::Vector2f(0, 0));
+        p1.addPoint(sf::Vector2f(-20, 20));
+        p1.rotate(90);
+        p1.bind();
+
+
+        p2.addPoint(sf::Vector2f(-20, -20));
+        p2.addPoint(sf::Vector2f(20, -20));
+        p2.addPoint(sf::Vector2f(20, 20));
+        p2.addPoint(sf::Vector2f(0, 0));
+        p2.addPoint(sf::Vector2f(-20, 20));
+        p2.rotate(-45);
+        p2.bind();
     }
 
     void Core::launch()
