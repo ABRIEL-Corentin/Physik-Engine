@@ -12,10 +12,10 @@
 namespace PhysikEngine
 {
     Circle::Circle(bool grip, const sf::Vector2f &position, float radius)
-        : AShape(!grip),
+        : AShape(false, radius),
           _grip(grip)
     {
-
+        std::cout << "mass: " << _mass << std::endl;
         setRadius(radius);
         setOrigin(sf::Vector2f(radius, radius));
         setOutlineColor(sf::Color::Green);
@@ -30,10 +30,13 @@ namespace PhysikEngine
 
     void Circle::update()
     {
-        if (!_grip)
-            return;
-
-        setPosition(sf::Vector2f(sf::Mouse::getPosition(Window::getInstance())));
+        if (_grip)
+            setPosition(sf::Vector2f(sf::Mouse::getPosition(Window::getInstance())));
+        else {
+            move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            _velocity += _acceleration;
+            _acceleration = sf::Vector2f();
+        }
     }
 
     void Circle::draw(sf::RenderTarget &target) const
@@ -58,27 +61,21 @@ namespace PhysikEngine
         float r2 = other.getRadius();
         bool coll = std::fabs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (r1 + r2) * (r1 + r2);
 
-        if (coll && !_static) {
-            float dist = std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
-            float dx = x2 - x1;
-            float dy = y2 - y1;
-            float nx = dx / dist;
-            float ny = dy / dist;
-            float touchDistFromB1 = (dist * (r1 / (r1 + r2)));
-            float contactX = x1 + nx * touchDistFromB1;
-            float contactY = y1 + ny * touchDistFromB1;
+        if (coll) {
+            sf::Vector2f tmp_vel = _velocity;
 
-            setPosition(sf::Vector2f(
-                contactX - nx * r1,
-                contactY - ny * r1
-            ));
+            _velocity = sf::Vector2f(
+                (_velocity.x * (_mass - other._mass) + (2 * other._mass * other._velocity.x)) / (_mass + other._mass),
+                (_velocity.y * (_mass - other._mass) + (2 * other._mass * other._velocity.y)) / (_mass + other._mass)
+            );
 
-            if (!other._static) {
-                other.setPosition(sf::Vector2f(
-                    contactX + nx * r2,
-                    contactY + ny * r2
-                ));
-            }
+            other._velocity = sf::Vector2f(
+                (other._velocity.x * (other._mass - _mass) + (2 * _mass * tmp_vel.x)) / (_mass + other._mass),
+                (other._velocity.y * (other._mass - _mass) + (2 * _mass * tmp_vel.y)) / (_mass + other._mass)
+            );
+
+            move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             setOutlineColor(sf::Color::Red);
         } else {
             setOutlineColor(sf::Color::Green);
