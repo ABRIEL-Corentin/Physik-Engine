@@ -15,7 +15,7 @@ namespace PhysikEngine
     class Circle : public AShape, public sf::CircleShape
     {
         public:
-            Circle(bool grip, const sf::Vector2f &position, float radius);
+            Circle(bool grip, const sf::Vector2f &position, float radius, bool air_friction);
 
             void update() override;
             void draw(sf::RenderTarget &target) const override;
@@ -23,6 +23,7 @@ namespace PhysikEngine
 
         private:
             bool _grip;
+            bool _air_friction;
 
             bool collide(Circle &other);
     };

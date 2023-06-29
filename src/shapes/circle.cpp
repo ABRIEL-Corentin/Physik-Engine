@@ -12,9 +12,10 @@
 
 namespace PhysikEngine
 {
-    Circle::Circle(bool grip, const sf::Vector2f &position, float radius)
+    Circle::Circle(bool grip, const sf::Vector2f &position, float radius, bool air_friction)
         : AShape(false, radius),
-          _grip(grip)
+          _grip(grip),
+          _air_friction(air_friction)
     {
         setRadius(radius);
         setOrigin(sf::Vector2f(radius, radius));
@@ -33,6 +34,8 @@ namespace PhysikEngine
         if (_grip)
             setPosition(sf::Vector2f(sf::Mouse::getPosition(Window::getInstance())));
         else {
+            _velocity.x -= (_air_friction && abs(_velocity.x) >= 0.001) ? sqrt(abs(_velocity.x)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.3 * ((_velocity.x < 0) ? -1.0 : 1.0) : 0;
+            _velocity.y -= (_air_friction && abs(_velocity.y) >= 0.001) ? sqrt(abs(_velocity.y)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.3 * ((_velocity.y < 0) ? -1.0 : 1.0) : 0;
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             _velocity += _acceleration;
             _acceleration = sf::Vector2f();

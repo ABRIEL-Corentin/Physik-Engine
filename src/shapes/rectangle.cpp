@@ -7,13 +7,15 @@
 
 #include "shapes/rectangle.hpp"
 #include "core.hpp"
+#include "cmath"
 
 
 namespace PhysikEngine
 {
-    Rectangle::Rectangle(bool grip, const sf::Vector2f &position, sf::Vector2f dimension)
+    Rectangle::Rectangle(bool grip, const sf::Vector2f &position, sf::Vector2f dimension, bool air_friction)
         : AShape(false, abs(dimension.x * dimension.y)),
-          _grip(grip)
+          _grip(grip),
+          _air_friction(air_friction)
     {
         std::cout << "mass: " << _mass << std::endl;
         setSize(dimension);
@@ -33,6 +35,9 @@ namespace PhysikEngine
         if (_grip)
             setPosition(sf::Vector2f(sf::Mouse::getPosition(Window::getInstance())));
         else {
+            _velocity.x -= (_air_friction && abs(_velocity.x) >= 0.001) ? sqrt(abs(_velocity.x)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.3 * ((_velocity.x < 0) ? -1.0 : 1.0) : 0;
+            _velocity.y -= (_air_friction && abs(_velocity.y) >= 0.001) ? sqrt(abs(_velocity.y)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.3 * ((_velocity.y < 0) ? -1.0 : 1.0) : 0;
+            _rotation -= (_air_friction && abs(_rotation) >= 0.001) ? sqrt(abs(_rotation)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.1 * ((_rotation < 0) ? -1.0 : 1.0) : 0;
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             _velocity += _acceleration;
             _acceleration = sf::Vector2f();
@@ -81,12 +86,11 @@ namespace PhysikEngine
         rect2points[2] = {2 * centerX - rect2points[0].x, 2 * centerY - rect2points[0].y};
         rect2points[3] = {2 * centerX - rect2points[1].x, 2 * centerY - rect2points[1].y};
 
-        if (dotProduct(rect1points[0], rect1points[1], rect2points[0]) * dotProduct(rect1points[0], rect1points[1], rect2points[1]) <= 0 ||
-            dotProduct(rect1points[2], rect1points[3], rect2points[0]) * dotProduct(rect1points[2], rect1points[3], rect2points[1]) <= 0 ||
-            dotProduct(rect2points[0], rect2points[1], rect1points[0]) * dotProduct(rect2points[0], rect2points[1], rect1points[1]) <= 0 ||
-            dotProduct(rect2points[2], rect2points[3], rect1points[0]) * dotProduct(rect2points[2], rect2points[3], rect1points[1]) <= 0) {
+        if (dotProduct(rect1points[0], rect1points[1], rect2points[0]) * dotProduct(rect1points[0], rect1points[1], rect2points[1]) < 0 ||
+            dotProduct(rect1points[2], rect1points[3], rect2points[0]) * dotProduct(rect1points[2], rect1points[3], rect2points[1]) < 0 ||
+            dotProduct(rect2points[0], rect2points[1], rect1points[0]) * dotProduct(rect2points[0], rect2points[1], rect1points[1]) < 0 ||
+            dotProduct(rect2points[2], rect2points[3], rect1points[0]) * dotProduct(rect2points[2], rect2points[3], rect1points[1]) < 0)
             return true;
-        }
         return false;
     }
 
@@ -95,6 +99,7 @@ namespace PhysikEngine
         bool coll = false;
 
         if (iscollision(other)) {
+            coll = true;
             double collisionNormalX = (getPosition().x + getSize().x / 2) - (other.getPosition().x + other.getSize().x / 2);
             double collisionNormalY = (getPosition().y + getSize().y / 2) - (other.getPosition().y + other.getSize().y / 2);
 
@@ -119,8 +124,10 @@ namespace PhysikEngine
             other._velocity.y = rect2NormalVelocity * collisionNormalY + rect2TangentVelocity;
 
             _rotation = atan2(other.getPosition().y - getPosition().y, other.getPosition().x - getPosition().x);
+            other._rotation = atan2(getPosition().y - other.getPosition().y , getPosition().x - other.getPosition().x);
+
             rotate(-_rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
-            other.rotate(- _rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            other.rotate(-other. _rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
 
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);

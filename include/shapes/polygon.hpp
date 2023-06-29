@@ -30,6 +30,7 @@ namespace PhysikEngine
         private:
             bool _grip;
             bool _draw_triangles;
+            bool _air_friction;
             std::vector<sf::ConvexShape> _triangles;
 
             bool collide(Polygon &other);
