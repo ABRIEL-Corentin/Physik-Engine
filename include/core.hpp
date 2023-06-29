@@ -19,7 +19,6 @@ namespace PhysikEngine
     {
         public:
             Core();
-
             void launch();
 
         private:

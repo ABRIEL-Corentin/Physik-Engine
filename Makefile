@@ -22,6 +22,7 @@ SRC =\
 	${SRC_PATH}/shapes/circle.cpp\
 	${SRC_PATH}/shapes/rectangle.cpp\
 	${SRC_PATH}/shapes/polygon.cpp\
+	${SRC_PATH}/error_handling/check_and_get_args.cpp\
 
 INCLUDE =\
 	-I./include/\
