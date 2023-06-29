@@ -13,9 +13,8 @@
 namespace PhysikEngine
 {
     Rectangle::Rectangle(bool grip, const sf::Vector2f &position, sf::Vector2f dimension, bool air_friction)
-        : AShape(false, abs(dimension.x * dimension.y)),
-          _grip(grip),
-          _air_friction(air_friction)
+        : AShape(false, abs(dimension.x * dimension.y), air_friction),
+          _grip(grip)
     {
         std::cout << "mass: " << _mass << std::endl;
         setSize(dimension);

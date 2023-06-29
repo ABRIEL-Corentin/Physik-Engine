@@ -54,4 +54,10 @@ namespace PhysikEngine
     {
         return (vec2.x - vec1.x) * (vec3.y - vec1.y) - (vec2.y - vec1.y) * (vec3.x - vec1.x);
     }
+
+    template<typename T>
+    T cross(const sf::Vector2<T> &vec1, const sf::Vector2<T> &vec2)
+    {
+        return vec1.x * vec2.y - vec1.y * vec2.x;
+    }
 }

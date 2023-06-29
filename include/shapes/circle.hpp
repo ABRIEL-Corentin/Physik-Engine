@@ -23,7 +23,6 @@ namespace PhysikEngine
 
         private:
             bool _grip;
-            bool _air_friction;
 
             bool collide(Circle &other);
     };

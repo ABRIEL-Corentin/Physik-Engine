@@ -13,9 +13,8 @@
 namespace PhysikEngine
 {
     Circle::Circle(bool grip, const sf::Vector2f &position, float radius, bool air_friction)
-        : AShape(false, radius),
-          _grip(grip),
-          _air_friction(air_friction)
+        : AShape(false, radius, air_friction),
+          _grip(grip)
     {
         setRadius(radius);
         setOrigin(sf::Vector2f(radius, radius));
