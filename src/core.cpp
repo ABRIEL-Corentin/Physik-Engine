@@ -24,11 +24,12 @@ namespace PhysikEngine
         c1.addForce(sf::Vector2f(20, 0));
         c2.addForce(sf::Vector2f(-10, 0));
 
-        Rectangle &r1 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 170), sf::Vector2f(40, 40));
-        Rectangle &r2 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 200), sf::Vector2f(40, 40));
+        Rectangle &r1 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 200), sf::Vector2f(40, 40));
+        Rectangle &r2 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 185), sf::Vector2f(40, 40));
 
-        r1.addForce(sf::Vector2f(20, 0));
-        r2.addForce(sf::Vector2f(-10, 0));
+        r1.setRotation(-30);
+        r1.addForce(sf::Vector2f(40, 0));
+        r2.addForce(sf::Vector2f(-30, 0));
 
         Polygon &p1 = _scene.addShape<Polygon>(false, sf::Vector2f(100, 250), 20);
         Polygon &p2 = _scene.addShape<Polygon>(true, sf::Vector2f(150, 250), 20);

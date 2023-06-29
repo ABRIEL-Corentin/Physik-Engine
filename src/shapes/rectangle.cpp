@@ -8,6 +8,7 @@
 #include "shapes/rectangle.hpp"
 #include "core.hpp"
 
+
 namespace PhysikEngine
 {
     Rectangle::Rectangle(bool grip, const sf::Vector2f &position, sf::Vector2f dimension)
@@ -16,7 +17,7 @@ namespace PhysikEngine
     {
         std::cout << "mass: " << _mass << std::endl;
         setSize(dimension);
-        setOrigin(sf::Vector2f(dimension.x / 2, dimension.y / 2));
+        setOrigin(0,0);
         setOutlineColor(sf::Color::Green);
         setOutlineThickness(-2);
         setFillColor(sf::Color::Transparent);
@@ -51,16 +52,49 @@ namespace PhysikEngine
         return false;
     }
 
+    double Rectangle::dotProduct(const sf::Vector2f& p1, const sf::Vector2f& p2, const sf::Vector2f& p3) {
+        return (p2.x - p1.x) * (p3.x - p1.x) + (p2.y - p1.y) * (p3.y - p1.y);
+    }
+
+    bool Rectangle::iscollision(Rectangle &other)
+    {
+        float angle = (getRotation() * M_PI) / 180.0;
+        float halfWidth = (getSize().x / 2.0);
+        float halfHeight = (getSize().y / 2.0);
+        float centerX = getPosition().x + halfWidth;
+        float centerY = getPosition().y + halfHeight;
+        sf::Vector2f rect1points[4];
+        sf::Vector2f rect2points[4];
+
+        rect1points[0] = {centerX + cos(angle) * halfWidth - sin(angle) * halfHeight, centerY + sin(angle) * halfWidth + cos(angle) * halfHeight};
+        rect1points[1] = {centerX - cos(angle) * halfWidth - sin(angle) * halfHeight, centerY - sin(angle) * halfWidth + cos(angle) * halfHeight};
+        rect1points[2] = {2 * centerX - rect1points[0].x, 2 * centerY - rect1points[0].y};
+        rect1points[3] = {2 * centerX - rect1points[1].x, 2 * centerY - rect1points[1].y};
+
+        angle = (other.getRotation() * M_PI) / 180.0;
+        halfWidth = (other.getSize().x / 2.0);
+        halfHeight = (other.getSize().y / 2.0);
+        centerX = other.getPosition().x + halfWidth;
+        centerY = other.getPosition().y + halfHeight;
+        rect2points[0] = {centerX + cos(angle) * halfWidth - sin(angle) * halfHeight, centerY + sin(angle) * halfWidth + cos(angle) * halfHeight};
+        rect2points[1] = {centerX - cos(angle) * halfWidth - sin(angle) * halfHeight, centerY - sin(angle) * halfWidth + cos(angle) * halfHeight};
+        rect2points[2] = {2 * centerX - rect2points[0].x, 2 * centerY - rect2points[0].y};
+        rect2points[3] = {2 * centerX - rect2points[1].x, 2 * centerY - rect2points[1].y};
+
+        if (dotProduct(rect1points[0], rect1points[1], rect2points[0]) * dotProduct(rect1points[0], rect1points[1], rect2points[1]) <= 0 ||
+            dotProduct(rect1points[2], rect1points[3], rect2points[0]) * dotProduct(rect1points[2], rect1points[3], rect2points[1]) <= 0 ||
+            dotProduct(rect2points[0], rect2points[1], rect1points[0]) * dotProduct(rect2points[0], rect2points[1], rect1points[1]) <= 0 ||
+            dotProduct(rect2points[2], rect2points[3], rect1points[0]) * dotProduct(rect2points[2], rect2points[3], rect1points[1]) <= 0) {
+            return true;
+        }
+        return false;
+    }
+
     bool Rectangle::collide(Rectangle &other)
     {
         bool coll = false;
-        double rect1_xf = getPosition().x;
-        double rect1_yf = getPosition().y;
 
-        if (rect1_xf >= other.getPosition().x && rect1_xf <= other.getPosition().x + other.getSize().x && rect1_yf >= other.getPosition().y && rect1_yf <= other.getPosition().y + other.getSize().y)
-            coll = true;
-
-        if (coll) {
+        if (iscollision(other)) {
             double collisionNormalX = (getPosition().x + getSize().x / 2) - (other.getPosition().x + other.getSize().x / 2);
             double collisionNormalY = (getPosition().y + getSize().y / 2) - (other.getPosition().y + other.getSize().y / 2);
 

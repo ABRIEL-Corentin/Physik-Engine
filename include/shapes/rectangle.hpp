@@ -22,7 +22,8 @@ namespace PhysikEngine
 
         private:
             bool _grip;
-
             bool collide(Rectangle &other);
+            bool iscollision(Rectangle &other);
+            double dotProduct(const sf::Vector2f& p1, const sf::Vector2f& p2, const sf::Vector2f& p3);
     };
 }
