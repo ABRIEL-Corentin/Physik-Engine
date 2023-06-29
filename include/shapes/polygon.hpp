@@ -19,6 +19,7 @@ namespace PhysikEngine
             {
                 bool collided;
                 std::vector<sf::Vector2f> points;
+                sf::Vector2f normal;
 
                 ContactInfo();
             };

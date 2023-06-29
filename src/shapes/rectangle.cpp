@@ -14,7 +14,7 @@
 namespace PhysikEngine
 {
     Rectangle::Rectangle(bool grip, const sf::Vector2f &position, sf::Vector2f dimension, bool air_friction)
-        : AShape(false, abs(dimension.x * dimension.y), air_friction),
+        : AShape(false, abs(dimension.x * dimension.y), air_friction, true),
           _grip(grip)
     {
         std::cout << "mass: " << _mass << std::endl;
@@ -35,9 +35,7 @@ namespace PhysikEngine
         if (_grip)
             setPosition(sf::Vector2f(sf::Mouse::getPosition(Window::getInstance())));
         else {
-            _velocity.x -= (_air_friction && abs(_velocity.x) >= 0.001) ? sqrt(abs(_velocity.x)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.3 * ((_velocity.x < 0) ? -1.0 : 1.0) : 0;
-            _velocity.y -= (_air_friction && abs(_velocity.y) >= 0.001) ? sqrt(abs(_velocity.y)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.3 * ((_velocity.y < 0) ? -1.0 : 1.0) : 0;
-            _rotation -= (_air_friction && abs(_rotation) >= 0.001) ? sqrt(abs(_rotation)) * Time::getInstance().getDeltaTime().asSeconds() * 4.0f * 0.1 * ((_rotation < 0) ? -1.0 : 1.0) : 0;
+            applyExternalForces();
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             _velocity += _acceleration;
             _acceleration = sf::Vector2f();

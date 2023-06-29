@@ -14,11 +14,12 @@ namespace PhysikEngine
 {
     Polygon::ContactInfo::ContactInfo()
         : collided(false),
-          points()
+          points(),
+          normal()
     { }
 
     Polygon::Polygon(bool grip, const sf::Vector2f &position, float mass)
-        : AShape(false, mass, false),
+        : AShape(false, mass, true, true),
           sf::ConvexShape(0),
           _grip(grip),
           _inv_mass(_mass ? 1.0f / _mass : 0)
@@ -35,10 +36,12 @@ namespace PhysikEngine
         if (_grip)
             setPosition(sf::Vector2f(sf::Mouse::getPosition(Window::getInstance())));
 
-        if (!_static) {
-            move(_velocity * Time::getInstance().getDeltaTime().asSeconds());
-            rotate(_rotation * Time::getInstance().getDeltaTime().asSeconds());
-        }
+        applyExternalForces();
+        if (_static)
+            return;
+
+        move(_velocity * Time::getInstance().getDeltaTime().asSeconds());
+        rotate(_rotation * Time::getInstance().getDeltaTime().asSeconds());
         _velocity += _acceleration;
         _acceleration = sf::Vector2f();
     }
@@ -76,7 +79,8 @@ namespace PhysikEngine
     bool Polygon::collide(Polygon &other)
     {
         ContactInfo contact_info = findContactPoints(other);
-        float e = 1;
+        float e = 0.2f;
+        float deg_to_rad = 180 / M_PI;
 
         if (!contact_info.collided)
             return false;
@@ -84,34 +88,32 @@ namespace PhysikEngine
         std::vector<sf::Vector2f> ra_vec = std::vector<sf::Vector2f>();
         std::vector<sf::Vector2f> rb_vec = std::vector<sf::Vector2f>();
         std::vector<sf::Vector2f> impulse_vec = std::vector<sf::Vector2f>();
-        sf::Vector2f normal = other.getPosition() - getPosition();
         float inertia_a = _mass * (std::pow(_velocity.x, 2) + std::pow(_velocity.y, 2));
         float inv_inertia_a = inertia_a > 0 ? 1.0f / inertia_a : 0;
         float inertia_b = other._mass * (std::pow(other._velocity.x, 2) + std::pow(other._velocity.y, 2));
         float inv_inertia_b = inertia_b > 0 ? 1.0f / inertia_b : 0;
-        float manitude = std::sqrt(normal.x * normal.x + normal.y * normal.y);
 
-        normal /= manitude;
         for (auto contact_point = contact_info.points.begin(); contact_point != contact_info.points.end(); ++contact_point) {
             sf::Vector2f ra = *contact_point - getPosition();
             sf::Vector2f rb = *contact_point - other.getPosition();
             sf::Vector2f ra_perp = sf::Vector2f(-ra.y, ra.x);
             sf::Vector2f rb_perp = sf::Vector2f(-rb.y, rb.x);
-            sf::Vector2f vel_rotation_a = ra_perp * _rotation;
-            sf::Vector2f vel_rotation_b = rb_perp * other._rotation;
+            sf::Vector2f vel_rotation_a = ra_perp * _rotation / deg_to_rad;
+            sf::Vector2f vel_rotation_b = rb_perp * other._rotation / deg_to_rad;
             sf::Vector2f relative_velocity = (other._velocity + vel_rotation_b) - (_velocity + vel_rotation_a);
-            float contact_velocity_mag = dot(relative_velocity, normal);
+            float contact_velocity_mag = dot(relative_velocity, contact_info.normal);
 
             ra_vec.push_back(ra);
             rb_vec.push_back(rb);
 
             if (contact_velocity_mag > 0) {
                 impulse_vec.push_back(sf::Vector2f());
+                // std::cout << "continue: " << contact_velocity_mag << std::endl;
                 continue;
             }
 
-            float ra_perp_dot_n = dot(ra_perp, normal);
-            float rb_perp_dot_n = dot(rb_perp, normal);
+            float ra_perp_dot_n = dot(ra_perp, contact_info.normal);
+            float rb_perp_dot_n = dot(rb_perp, contact_info.normal);
             float denom = _inv_mass + other._inv_mass +
                 (ra_perp_dot_n * ra_perp_dot_n) * inv_inertia_a +
                 (rb_perp_dot_n * rb_perp_dot_n) * inv_inertia_b;
@@ -120,8 +122,14 @@ namespace PhysikEngine
             j /= denom;
             j /= static_cast<float>(contact_info.points.size());
 
-            sf::Vector2f impulse = j * normal;
+            sf::Vector2f impulse = j * contact_info.normal;
+
             impulse_vec.push_back(impulse);
+
+            std::cout << "impulse: " << impulse.x << " " << impulse.y << std::endl;
+            std::cout << getPointCount() << " other velocity: " << other._velocity.x << " " << other._velocity.y << std::endl;
+            std::cout << getPointCount() << " velocity: " << _velocity.x << " " << _velocity.y << std::endl;
+            std::cout << getPointCount() << " static: " << _static << std::endl;
         }
 
         for (std::size_t i = 0; i < contact_info.points.size(); ++i) {
@@ -129,16 +137,16 @@ namespace PhysikEngine
             sf::Vector2f ra = ra_vec.at(i);
             sf::Vector2f rb = rb_vec.at(i);
 
-            _velocity -= impulse * _inv_mass;
-            _rotation -= cross(ra, impulse) * inv_inertia_a * (180 / M_PI);
+            _velocity += -impulse * _inv_mass;
+            _rotation += -cross(ra, impulse) * inv_inertia_a * (180 / M_PI);
             other._velocity += impulse * other._inv_mass;
             other._rotation += cross(rb, impulse) * inv_inertia_b * (180 / M_PI);
         }
 
-        move(_velocity * Time::getInstance().getDeltaTime().asSeconds());
-        rotate(_rotation * Time::getInstance().getDeltaTime().asSeconds());
-        other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds());
-        other.rotate(other._rotation * Time::getInstance().getDeltaTime().asSeconds());
+        // move(_velocity * Time::getInstance().getDeltaTime().asSeconds());
+        // rotate(_rotation * Time::getInstance().getDeltaTime().asSeconds());
+        // other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds());
+        // other.rotate(other._rotation * Time::getInstance().getDeltaTime().asSeconds());
 
         return true;
     }
@@ -169,6 +177,12 @@ namespace PhysikEngine
                         collision_point.y = p1.y + ua * (p2.y - p1.y);
                         contact_info.points.push_back(collision_point);
                         contact_info.collided = true;
+
+                        float nx = p2.y - p1.y;
+                        float ny = p1.x - p2.x;
+                        float length = std::sqrt(nx * nx + ny * ny);
+                        contact_info.normal.x = nx / length;
+                        contact_info.normal.y = ny / length;
                     }
                 }
             }

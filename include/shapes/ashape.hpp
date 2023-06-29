@@ -15,7 +15,7 @@ namespace PhysikEngine
     class AShape : public IShape
     {
         public:
-            AShape(bool is_static, float mass, bool air_friction);
+            AShape(bool is_static, float mass, bool air_friction, bool gravity);
             virtual ~AShape() = default;
 
             virtual void update() override = 0;
@@ -37,5 +37,8 @@ namespace PhysikEngine
             float _rotation;
             bool _static;
             bool _air_friction;
+            bool _gravity;
+
+            void applyExternalForces();
     };
 }
