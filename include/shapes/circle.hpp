@@ -12,8 +12,12 @@
 
 namespace PhysikEngine
 {
+    class Rectangle;
+
     class Circle : public AShape, public sf::CircleShape
     {
+        friend class Rectangle;
+
         public:
             Circle(bool grip, const sf::Vector2f &position, float radius, bool air_friction);
 
@@ -24,6 +28,8 @@ namespace PhysikEngine
         private:
             bool _grip;
 
+            bool iscollision(Rectangle &other);
             bool collide(Circle &other);
+            bool collide(Rectangle &other);
     };
 }

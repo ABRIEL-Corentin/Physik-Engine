@@ -7,6 +7,7 @@
 ////////////////////////
 
 #include "shapes/circle.hpp"
+#include "shapes/rectangle.hpp"
 #include "core.hpp"
 #include "utils.hpp"
 
@@ -50,7 +51,24 @@ namespace PhysikEngine
     {
         if (dynamic_cast<Circle *>(&other))
             return collide(dynamic_cast<Circle &>(other));
+        if (dynamic_cast<Rectangle *>(&other))
+            return collide(dynamic_cast<Rectangle &>(other));
         return false;
+    }
+
+    bool Circle::iscollision(Rectangle &other)
+    {
+        double dx = std::abs(other.getPosition().x + (other.getSize().x / 2) - getPosition().x);
+        double dy = std::abs(other.getPosition().y + (other.getSize().y / 2) - getPosition().y);
+
+        if (dx > (other.getSize().x / 2.0 + getRadius()))
+            return false;
+        if (dy > (other.getSize().y / 2.0 + getRadius()))
+            return false;
+        if (dx <= (other.getSize().x / 2.0) || dy <= (other.getSize().y / 2.0))
+            return true;
+
+        return (std::pow((dx - other.getSize().x / 2.0), 2) + std::pow((dy - other.getSize().y / 2.0), 2) <= std::pow(getRadius(), 2));
     }
 
     bool Circle::collide(Circle &other)
@@ -87,6 +105,49 @@ namespace PhysikEngine
 
             _velocity = v1_collide + v1_remainder;
             other._velocity = v2_collide + v2_remainder;
+
+            move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            setOutlineColor(sf::Color::Red);
+        } else {
+            setOutlineColor(sf::Color::Green);
+        }
+
+        return coll;
+    }
+    bool Circle::collide(Rectangle &other)
+    {
+        bool coll = false;
+
+        if (iscollision(other)) {
+            coll = true;
+
+            double collisionNormalX = (getPosition().x + getRadius()) - (other.getPosition().x + other.getSize().x / 2);
+            double collisionNormalY = (getPosition().y + getRadius()) - (other.getPosition().y + other.getSize().y / 2);
+
+            double collisionNormalLength = sqrt(collisionNormalX * collisionNormalX + collisionNormalY * collisionNormalY);
+            collisionNormalX /= collisionNormalLength;
+            collisionNormalY /= collisionNormalLength;
+
+            double rect1NormalVelocity = other._velocity.x * collisionNormalX + other._velocity.y * collisionNormalY;
+            double circleNormalVelocity = _velocity.x * collisionNormalX + _velocity.y * collisionNormalY;
+
+            double rect1TangentVelocity = other._velocity.x - rect1NormalVelocity * collisionNormalX;
+            double circleTangentVelocity = _velocity.x - circleNormalVelocity * collisionNormalX;
+
+            double temp = rect1NormalVelocity;
+            rect1NormalVelocity = circleNormalVelocity;
+            circleNormalVelocity = temp;
+
+            other._velocity.x = rect1NormalVelocity * collisionNormalX + rect1TangentVelocity;
+            other._velocity.y = rect1NormalVelocity * collisionNormalY + rect1TangentVelocity;
+
+            _velocity.x = circleNormalVelocity * collisionNormalX + circleTangentVelocity;
+            _velocity.y = circleNormalVelocity * collisionNormalY + circleTangentVelocity;
+
+            other._rotation = atan2(other.getPosition().y - getPosition().y, other.getPosition().x - getPosition().x) * 2;
+
+            other.rotate(-other._rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
 
             move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
             other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);

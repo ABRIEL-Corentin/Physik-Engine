@@ -18,35 +18,53 @@ namespace PhysikEngine
           _time(Time::getInstance()),
           _scene()
     {
-        Circle &c1 = _scene.addShape<Circle>(false, sf::Vector2f(100, 100), 20, true);
-        Circle &c2 = _scene.addShape<Circle>(false, sf::Vector2f(500, 120), 20, true);
+        // Circle &c1 = _scene.addShape<Circle>(false, sf::Vector2f(100, 120), 20, true);
+        // Circle &c2 = _scene.addShape<Circle>(false, sf::Vector2f(500, 140), 20, true);
 
+        // c1.addForce(sf::Vector2f(20, 0));
+        // c2.addForce(sf::Vector2f(-10, 0));
+
+        // Rectangle &r1 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 200), sf::Vector2f(40, 40), true);
+        // Rectangle &r2 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 185), sf::Vector2f(40, 40), true);
+
+        // r1.setRotation(-30);
+        // r1.addForce(sf::Vector2f(40, 0));
+        // r2.addForce(sf::Vector2f(-30, 0));
+
+        // Polygon &p1 = _scene.addShape<Polygon>(false, sf::Vector2f(100, 250), 20);
+        // Polygon &p2 = _scene.addShape<Polygon>(true, sf::Vector2f(150, 250), 20);
+
+        // p1.addPoint(sf::Vector2f(0, -20));
+        // p1.addPoint(sf::Vector2f(20, -20));
+        // p1.addPoint(sf::Vector2f(20, 20));
+        // p1.addPoint(sf::Vector2f(0, 0));
+        // p1.addPoint(sf::Vector2f(-20, 20));
+        // p1.rotate(90);
+        // p1.bind();
+
+
+        // p2.addPoint(sf::Vector2f(-20, -20));
+        // p2.addPoint(sf::Vector2f(20, -20));
+        // p2.addPoint(sf::Vector2f(20, 20));
+        // p2.addPoint(sf::Vector2f(0, 0));
+        // p2.addPoint(sf::Vector2f(-20, 20));
+        // p2.rotate(-45);
+        // p2.bind();
+
+        // Rectangle &r1 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 200), sf::Vector2f(40, 40));
+        // Rectangle &r2 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 185), sf::Vector2f(40, 40));
+        // Rectangle &r3 = _scene.addShape<Rectangle>(false, sf::Vector2f(600, 135), sf::Vector2f(40, 40));
+
+        // r1.setRotation(-30);
+        // r1.addForce(sf::Vector2f(40, 0));
+        // r2.addForce(sf::Vector2f(-30, 0));
+        // r3.setRotation(-45);
+
+        Circle &c1 = _scene.addShape<Circle>(false, sf::Vector2f(100, 120), 20, false);
+        Rectangle &r2 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 115), sf::Vector2f(40, 40), false);
         c1.addForce(sf::Vector2f(20, 0));
-        c2.addForce(sf::Vector2f(-10, 0));
-
-        Rectangle &r1 = _scene.addShape<Rectangle>(false, sf::Vector2f(100, 200), sf::Vector2f(40, 40), true);
-        Rectangle &r2 = _scene.addShape<Rectangle>(false, sf::Vector2f(500, 185), sf::Vector2f(40, 40), true);
-
-        r1.setRotation(-30);
-        r1.addForce(sf::Vector2f(40, 0));
         r2.addForce(sf::Vector2f(-30, 0));
 
-        Polygon &p1 = _scene.addShape<Polygon>(false, sf::Vector2f(100, 400), 100);
-        Polygon &p2 = _scene.addShape<Polygon>(false, sf::Vector2f(100, 250), 20);
-
-        p1.addPoint(sf::Vector2f(-20, -20));
-        p1.addPoint(sf::Vector2f(20, -20));
-        p1.addPoint(sf::Vector2f(20, 20));
-        p1.addPoint(sf::Vector2f(-20, 20));
-        p1.setStatic(true);
-        p1.rotate(10);
-
-        p2.addPoint(sf::Vector2f(-10, -10));
-        p2.addPoint(sf::Vector2f(20, -20));
-        p2.addPoint(sf::Vector2f(20, 20));
-        p2.addPoint(sf::Vector2f(10, 30));
-        p2.addPoint(sf::Vector2f(-20, 20));
-        p2.addForce(sf::Vector2f(0, 100));
     }
 
     void Core::launch()

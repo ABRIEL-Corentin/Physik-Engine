@@ -6,6 +6,7 @@
 */
 
 #include "shapes/rectangle.hpp"
+#include "shapes/circle.hpp"
 #include "core.hpp"
 #include "cmath"
 
@@ -53,6 +54,8 @@ namespace PhysikEngine
     {
         if (dynamic_cast<Rectangle *>(&other))
             return collide(dynamic_cast<Rectangle &>(other));
+        if (dynamic_cast<Circle *>(&other))
+            return collide(dynamic_cast<Circle &>(other));
         return false;
     }
 
@@ -91,6 +94,21 @@ namespace PhysikEngine
             dotProduct(rect2points[2], rect2points[3], rect1points[0]) * dotProduct(rect2points[2], rect2points[3], rect1points[1]) < 0)
             return true;
         return false;
+    }
+
+    bool Rectangle::iscollision(Circle &other)
+    {
+        double dx = std::abs(getPosition().x + (getSize().x / 2) - other.getPosition().x);
+        double dy = std::abs(getPosition().y + (getSize().y / 2) - other.getPosition().y);
+
+        if (dx > (getSize().x / 2.0 + other.getRadius()))
+            return false;
+        if (dy > (getSize().y / 2.0 + other.getRadius()))
+            return false;
+        if (dx <= (getSize().x / 2.0) || dy <= (getSize().y / 2.0))
+            return true;
+
+        return (std::pow((dx - getSize().x / 2.0), 2) + std::pow((dy - getSize().y / 2.0), 2) <= std::pow(other.getRadius(), 2));
     }
 
     bool Rectangle::collide(Rectangle &other)
@@ -135,6 +153,49 @@ namespace PhysikEngine
             setOutlineColor(sf::Color::Green);
         }
 
+        return coll;
+    }
+
+    bool Rectangle::collide(Circle &other)
+    {
+        bool coll = false;
+
+        if (iscollision(other)) {
+            coll = true;
+
+            double collisionNormalX = (getPosition().x + getSize().x / 2) - (other.getPosition().x + other.getRadius());
+            double collisionNormalY = (getPosition().y + getSize().y / 2) - (other.getPosition().y + other.getRadius());
+
+            double collisionNormalLength = sqrt(collisionNormalX * collisionNormalX + collisionNormalY * collisionNormalY);
+            collisionNormalX /= collisionNormalLength;
+            collisionNormalY /= collisionNormalLength;
+
+            double rect1NormalVelocity = _velocity.x * collisionNormalX + _velocity.y * collisionNormalY;
+            double circleNormalVelocity = other._velocity.x * collisionNormalX + other._velocity.y * collisionNormalY;
+
+            double rect1TangentVelocity = _velocity.x - rect1NormalVelocity * collisionNormalX;
+            double circleTangentVelocity = other._velocity.x - circleNormalVelocity * collisionNormalX;
+
+            double temp = rect1NormalVelocity;
+            rect1NormalVelocity = circleNormalVelocity;
+            circleNormalVelocity = temp;
+
+            _velocity.x = rect1NormalVelocity * collisionNormalX + rect1TangentVelocity;
+            _velocity.y = rect1NormalVelocity * collisionNormalY + rect1TangentVelocity;
+
+            other._velocity.x = circleNormalVelocity * collisionNormalX + circleTangentVelocity;
+            other._velocity.y = circleNormalVelocity * collisionNormalY + circleTangentVelocity;
+
+            _rotation = atan2(other.getPosition().y - getPosition().y, other.getPosition().x - getPosition().x) * 2;
+
+            rotate(-_rotation * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+
+            move(_velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds() * 4.0f);
+            setOutlineColor(sf::Color::Red);
+        } else {
+            setOutlineColor(sf::Color::Green);
+        }
         return coll;
     }
 }
