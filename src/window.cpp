@@ -11,7 +11,7 @@
 namespace PhysikEngine
 {
     Window::Window()
-        : sf::RenderWindow({800, 600, 32}, "Physik Engine")
+        : sf::RenderWindow({1920, 1080, 32}, "Physik Engine", sf::Style::Fullscreen)
     {
         // setFramerateLimit(10);
         initImGui();

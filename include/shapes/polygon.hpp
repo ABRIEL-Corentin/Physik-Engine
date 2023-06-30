@@ -34,6 +34,10 @@ namespace PhysikEngine
             sf::Vector2f getPointGlobal(std::size_t index);
             sf::Vector2f getPointGlobal(std::size_t index, const sf::ConvexShape &shape);
 
+            inline sf::FloatRect getBounds() const override { return getGlobalBounds(); }
+            inline const sf::Vector2f &getPos() const override { return sf::ConvexShape::getPosition(); }
+            inline void setPos(const sf::Vector2f &position) override { return sf::ConvexShape::setPosition(position); }
+
         private:
             bool _grip;
             float _inv_mass;

@@ -21,5 +21,9 @@ namespace PhysikEngine
             virtual void update() = 0;
             virtual void draw(sf::RenderTarget &target) const = 0;
             virtual bool collide(IShape &other) = 0;
+            virtual sf::FloatRect getBounds() const = 0;
+            virtual const sf::Vector2f &getPos() const = 0;
+            virtual void setPos(const sf::Vector2f &position) = 0;
+            virtual void multiplyVelocity(const sf::Vector2f &velocity) = 0;
     };
 }

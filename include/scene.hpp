@@ -26,6 +26,9 @@ namespace PhysikEngine
             void update();
             void draw(sf::RenderTarget &target);
 
+            inline std::size_t getSize() const { return _shapes.size(); }
+            inline void clear() { _shapes.clear(); }
+
         private:
             std::vector<std::unique_ptr<IShape>> _shapes;
     };

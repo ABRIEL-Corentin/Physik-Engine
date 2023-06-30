@@ -19,7 +19,7 @@ namespace PhysikEngine
     { }
 
     Polygon::Polygon(bool grip, const sf::Vector2f &position, float mass)
-        : AShape(false, mass, true, true),
+        : AShape(false, mass),
           sf::ConvexShape(0),
           _grip(grip),
           _inv_mass(_mass ? 1.0f / _mass : 0)
@@ -27,7 +27,7 @@ namespace PhysikEngine
         setPosition(position);
         setOutlineColor(sf::Color::Green);
         setOutlineThickness(-2);
-        setFillColor(sf::Color::Magenta);
+        setFillColor(sf::Color::Cyan);
     }
 
     void Polygon::update()
@@ -108,7 +108,6 @@ namespace PhysikEngine
 
             if (contact_velocity_mag > 0) {
                 impulse_vec.push_back(sf::Vector2f());
-                // std::cout << "continue: " << contact_velocity_mag << std::endl;
                 continue;
             }
 
@@ -125,11 +124,6 @@ namespace PhysikEngine
             sf::Vector2f impulse = j * contact_info.normal;
 
             impulse_vec.push_back(impulse);
-
-            std::cout << "impulse: " << impulse.x << " " << impulse.y << std::endl;
-            std::cout << getPointCount() << " other velocity: " << other._velocity.x << " " << other._velocity.y << std::endl;
-            std::cout << getPointCount() << " velocity: " << _velocity.x << " " << _velocity.y << std::endl;
-            std::cout << getPointCount() << " static: " << _static << std::endl;
         }
 
         for (std::size_t i = 0; i < contact_info.points.size(); ++i) {
@@ -142,12 +136,6 @@ namespace PhysikEngine
             other._velocity += impulse * other._inv_mass;
             other._rotation += cross(rb, impulse) * inv_inertia_b * (180 / M_PI);
         }
-
-        // move(_velocity * Time::getInstance().getDeltaTime().asSeconds());
-        // rotate(_rotation * Time::getInstance().getDeltaTime().asSeconds());
-        // other.move(other._velocity * Time::getInstance().getDeltaTime().asSeconds());
-        // other.rotate(other._rotation * Time::getInstance().getDeltaTime().asSeconds());
-
         return true;
     }
 

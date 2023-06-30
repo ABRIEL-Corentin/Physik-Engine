@@ -13,8 +13,8 @@
 
 namespace PhysikEngine
 {
-    Circle::Circle(bool grip, const sf::Vector2f &position, float radius, bool air_friction)
-        : AShape(false, radius, air_friction, true),
+    Circle::Circle(bool grip, const sf::Vector2f &position, float radius)
+        : AShape(false, radius),
           _grip(grip)
     {
         setRadius(radius);
@@ -23,10 +23,7 @@ namespace PhysikEngine
         setOutlineThickness(-2);
         setFillColor(sf::Color::Transparent);
         setPosition(position);
-        if (grip)
-            setFillColor(sf::Color::Cyan);
-        else
-            setFillColor(sf::Color::Magenta);
+        setFillColor(sf::Color::Cyan);
     }
 
     void Circle::update()
