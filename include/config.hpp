@@ -16,5 +16,6 @@ namespace PhysikEngine
     {
         bool gravity;
         bool air_friction;
+        bool grid;
     };
 }

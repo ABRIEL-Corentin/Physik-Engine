@@ -131,6 +131,7 @@ namespace PhysikEngine
             ImGui::Text("Entities: %ld", _scene.getSize());
             ImGui::Checkbox("Gravity", &Config::getInstance().gravity);
             ImGui::Checkbox("Air friction", &Config::getInstance().air_friction);
+            ImGui::Checkbox("Grid", &Config::getInstance().grid);
 
             ImGui::SliderInt("##circle", &spawn_circle_count, 1, 100);
             ImGui::SameLine();

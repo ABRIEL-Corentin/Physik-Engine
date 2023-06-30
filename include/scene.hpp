@@ -9,7 +9,7 @@
 #pragma once
 
 #include "physik-engine.hpp"
-#include "shapes/ishape.hpp"
+#include "grid.hpp"
 
 namespace PhysikEngine
 {
@@ -17,19 +17,15 @@ namespace PhysikEngine
     {
         public:
             template<std::derived_from<IShape> T, typename ... ARGS>
-            T &addShape(const ARGS &... args)
-            {
-                _shapes.push_back(std::make_unique<T>(args...));
-                return dynamic_cast<T &>(*_shapes.back());
-            }
+            inline T &addShape(const ARGS &... args) { return _grid.addShape<T>(args...); }
 
             void update();
             void draw(sf::RenderTarget &target);
 
-            inline std::size_t getSize() const { return _shapes.size(); }
-            inline void clear() { _shapes.clear(); }
+            inline std::size_t getSize() const { return _grid.size(); }
+            inline void clear() { _grid.clear(); }
 
         private:
-            std::vector<std::unique_ptr<IShape>> _shapes;
+            Grid _grid;
     };
 }
